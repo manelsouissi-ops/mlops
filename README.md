@@ -57,3 +57,30 @@ jupyter notebook churn_model.ipynb
 ```
 
 Run the notebook cells from top to bottom to reproduce the exploration, data preparation, training, evaluations, and experiments. Running `generate_data.py` recreates `churn_data.csv`; running the Step 6 cells overwrites `model.pkl` with the latest experiment, Essai 3.
+
+
+## TP3 — Experiment Tracking with MLflow
+
+MLflow 3.17.1 tracks the Random Forest experiments, including their hyperparameters, evaluation metrics, and saved model artifacts. The runs are stored locally in the MLflow tracking store.
+
+| Experiment | n_estimators | max_depth | Accuracy | Precision | Recall | F1     |
+| ---------- | ------------ | --------- | -------- | --------- | ------ | ------ |
+| Essai 1    | 100          | 5         | 0.99     | 1.00      | 0.80   | 0.8889 |
+| Essai 2    | 50           | 3         | 0.96     | 1.00      | 0.20   | 0.3333 |
+| Essai 3    | 100          | 5         | 0.99     | 1.00      | 0.80   | 0.8889 |
+
+### MLflow Tracking Interface
+
+![MLflow experiment comparison interface](screenshots/mlflow_experiments.png)
+
+Essai 1 and Essai 3 have equal performance on this evaluation. Essai 3 uses fewer original input features because `salaire` was removed. Essai 2 performs worse, especially in recall and F1-score. Since churn classes are imbalanced, accuracy alone is insufficient for evaluating model performance.
+
+To launch the local MLflow interface from the project directory, run:
+
+```powershell
+mlflow ui --port 5000
+```
+
+Then open [http://localhost:5000](http://localhost:5000).
+
+The MLflow tracking database `mlflow.db` and artifacts directory `mlruns/` are excluded from Git by `.gitignore`.
