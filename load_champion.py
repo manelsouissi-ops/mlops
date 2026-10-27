@@ -1,0 +1,31 @@
+import mlflow
+import mlflow.sklearn
+import pandas as pd
+
+# Même base que le TP3
+mlflow.set_tracking_uri("sqlite:///mlflow.db")
+
+# Charger le modèle champion
+model = mlflow.sklearn.load_model("models:/churn-model@champion")
+
+print("Modele charge :", type(model).__name__)
+print("Variables attendues :", list(model.feature_names_in_))
+
+# Nouveau client
+client = pd.DataFrame([{
+    "age": 35,
+    "salaire": 2500,
+    "anciennete": 1,
+    "consommation": 10,
+    "abonnement_Premium": False,
+    "abonnement_Standard": True
+}])
+
+# Adapter les colonnes au modèle
+client = client[list(model.feature_names_in_)]
+
+# Prédiction
+print(
+    "Le client va-t-il partir ? ->",
+    "OUI" if model.predict(client)[0] == 1 else "NON"
+)
